@@ -1,6 +1,10 @@
 # gochat
 Simple and concurrent tcp chat server
 
+## Requirements
+
+* Go 1.7+
+
 ## Install it
 
 For the moment it is not published yet, so try doing a go get to:
@@ -65,3 +69,6 @@ logout
 # it will answer with
 Goodbye lfmexi
 ```
+## Author
+
+* Luis Fernando Morales ([lfmexi](https://github.com/lfmexi))

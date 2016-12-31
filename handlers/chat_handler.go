@@ -21,6 +21,8 @@ type incomingClient struct {
 	username string
 }
 
+// ChatHandler implements the server.Handler interface, also has
+// methods for message broking.
 type ChatHandler struct {
 	incomingUsers   chan *userHandler
 	users           map[string]*userHandler
@@ -31,6 +33,7 @@ type ChatHandler struct {
 	messagePool     chan map[string]string
 }
 
+// StartBroker creates a go routine for listening all the handler channels in c.
 func (c *ChatHandler) StartBroker() {
 	go func() {
 		for {
@@ -129,6 +132,8 @@ func (c *ChatHandler) sendMessage(messageBody map[string]string, conn net.Conn, 
 	return nil
 }
 
+// ServeTCP is the implementation of server.Handler.ServeTCP.
+// Returns an error if there is something wrong with the incoming connection net.Conn.
 func (c *ChatHandler) ServeTCP(conn net.Conn) error {
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
@@ -158,6 +163,8 @@ func (c *ChatHandler) ServeTCP(conn net.Conn) error {
 	return nil
 }
 
+// NewChatHandler creates a ChatHandler value.
+// Returns the pointer of that value.
 func NewChatHandler() *ChatHandler {
 	return &ChatHandler{
 		make(chan *userHandler),

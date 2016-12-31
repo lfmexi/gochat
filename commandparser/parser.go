@@ -6,12 +6,16 @@ import (
 	"strings"
 )
 
+// Login is the CommandType of the login commands.
+// Logout is the CommandType of the logout commands.
+// Message is the CommandType of the message commands.
 const (
 	Login   = "login"
 	Logout  = "logout"
 	Message = "message"
 )
 
+// CommandType could be one of the defined const strings.
 type CommandType string
 
 func isLogoutCommand(command string) bool {
@@ -51,6 +55,8 @@ func isMessageCommand(command string) (bool, map[string]string) {
 	return false, nil
 }
 
+// ParseMessage identifies the CommandType of the received message.
+// Returns the CommandType and the corresponding value in an interface{}.
 func ParseMessage(message string) (CommandType, interface{}) {
 
 	if ok, value := isLoginCommand(message); ok {
