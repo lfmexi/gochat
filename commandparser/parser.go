@@ -18,6 +18,16 @@ const (
 // CommandType could be one of the defined const strings.
 type CommandType string
 
+// CommandParseError is the custom error for these actions
+type CommandParseError struct {
+	in  string
+	err error
+}
+
+func (c *CommandParseError) Error() string {
+	return fmt.Sprintf("Parse error with the input \"%s\"", c.in)
+}
+
 func isLogoutCommand(command string) bool {
 	validLogout := regexp.MustCompile(`logout`)
 	if validLogout.MatchString(command) {
@@ -57,16 +67,17 @@ func isMessageCommand(command string) (bool, map[string]string) {
 
 // ParseMessage identifies the CommandType of the received message.
 // Returns the CommandType and the corresponding value in an interface{}.
-func ParseMessage(message string) (CommandType, interface{}) {
+func ParseMessage(message string) (CommandType, interface{}, error) {
 
 	if ok, value := isLoginCommand(message); ok {
-		return Login, value
+		return Login, value, nil
 	}
 	if ok, value := isMessageCommand(message); ok {
-		return Message, value
+		return Message, value, nil
 	}
 	if ok := isLogoutCommand(message); ok {
-		return Logout, nil
+		return Logout, nil, nil
 	}
-	return "", nil
+	err := fmt.Errorf("The message given is invalid")
+	return "", nil, &CommandParseError{message, err}
 }

@@ -62,6 +62,7 @@ func (c *ChatHandler) StartBroker() {
 func (c *ChatHandler) logoutClient(clientAddr net.Addr) {
 	user := c.clients[clientAddr]
 	if user != "" {
+		log.Printf("User %s disconnected from %s\n", user, clientAddr)
 		c.dyingUsers <- user
 		c.dyingClients <- clientAddr
 	}
@@ -147,18 +148,15 @@ func (c *ChatHandler) ServeTCP(conn net.Conn) error {
 		return err
 	}
 
-	command, value := commandparser.ParseMessage(string(cmd))
-
-	if command == commandparser.Login {
-		return c.loginUser(value.(string), conn, writer)
-	}
-
-	if command == commandparser.Message {
-		return c.sendMessage(value.(map[string]string), conn, writer)
-	}
-
-	if command == commandparser.Logout {
-		return c.logoutUser(conn, writer)
+	if command, value, err := commandparser.ParseMessage(string(cmd)); err == nil {
+		switch command {
+		case commandparser.Login:
+			return c.loginUser(value.(string), conn, writer)
+		case commandparser.Message:
+			return c.sendMessage(value.(map[string]string), conn, writer)
+		case commandparser.Logout:
+			return c.logoutUser(conn, writer)
+		}
 	}
 	return nil
 }

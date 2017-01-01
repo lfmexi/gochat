@@ -17,6 +17,9 @@ _cgo_defun.c
 _cgo_gotypes.go
 _cgo_export.*
 
+# Coverage Profilesvalue.(map[string]string)
+*.out
+
 _testmain.go
 
 *.exe
