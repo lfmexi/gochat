@@ -23,7 +23,6 @@ func init() {
 func main() {
 	server := server.NewServer(fmt.Sprintf("%s:%s", host, port))
 	handler := handlers.NewChatHandler()
-	handler.StartBroker()
 	server.SetHandler(handler)
 	server.Listen()
 }

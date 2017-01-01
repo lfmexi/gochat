@@ -37,7 +37,7 @@ func isLogoutCommand(command string) bool {
 }
 
 func isLoginCommand(command string) (bool, string) {
-	validLogin := regexp.MustCompile(`^login [a-z]([a-z]|[0-9])+$`)
+	validLogin := regexp.MustCompile(`^login [a-z]([a-zA-Z]|[1-9])+$`)
 	if validLogin.MatchString(command) {
 		values := strings.Split(command, " ")
 		return true, values[1]
@@ -46,7 +46,7 @@ func isLoginCommand(command string) (bool, string) {
 }
 
 func isMessageCommand(command string) (bool, map[string]string) {
-	validMessage := regexp.MustCompile(`message [a-z]([a-z]|[0-9])+ .`)
+	validMessage := regexp.MustCompile(`message [a-z]([a-zA-Z]|[0-9])+ .`)
 	if validMessage.MatchString(command) {
 		values := strings.Split(command, " ")
 		var resultMap = make(map[string]string)
