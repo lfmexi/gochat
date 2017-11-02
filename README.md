@@ -1,6 +1,8 @@
 # gochat
 Simple and concurrent tcp chat server
 
+[![CircleCI](https://circleci.com/gh/lfmexi/gochat.svg?style=svg)](https://circleci.com/gh/lfmexi/gochat)
+
 ## Requirements
 
 * Go 1.7+
