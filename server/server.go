@@ -55,7 +55,11 @@ func (s *Server) Listen() {
 			return
 		}
 		if s.Handler != nil {
-			go s.handleConnection(conn)
+			log.Printf("server accepting connection from %s", conn.RemoteAddr())
+			go func () {
+				log.Println("handling connection")
+				s.handleConnection(conn)
+			}()
 		}
 	}
 }

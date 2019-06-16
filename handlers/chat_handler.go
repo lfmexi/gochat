@@ -56,7 +56,8 @@ func (c *ChatHandler) ServeTCP(conn net.Conn) error {
 	writer := bufio.NewWriter(conn)
 
 	cmd, _, err := reader.ReadLine()
-
+	log.Printf("Getting message from %s", conn.RemoteAddr())
+	
 	if err != nil {
 		if err.Error() == "EOF" {
 			c.logoutClient(conn.RemoteAddr())
