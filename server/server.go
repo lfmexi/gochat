@@ -20,8 +20,9 @@ type Handler interface {
 // Addr is the string address in which the server will listen to clients.
 // Handler is the implementation of the Handler interface.
 type Server struct {
-	Addr    string
-	Handler Handler
+	Addr     string
+	Handler  Handler
+	exitChan <-chan bool
 }
 
 // SetHandler takes an implementation of the Handler interface and sets it
@@ -42,6 +43,11 @@ func (s *Server) handleConnection(conn net.Conn) {
 
 // Listen makes s to listen new tcp connections on s.Addr.
 func (s *Server) Listen() {
+	go s.listen()
+	<-s.exitChan
+}
+
+func (s *Server) listen() {
 	listen, err := net.Listen("tcp", s.Addr)
 	if err != nil {
 		log.Println(err)
@@ -56,7 +62,7 @@ func (s *Server) Listen() {
 		}
 		if s.Handler != nil {
 			log.Printf("server accepting connection from %s", conn.RemoteAddr())
-			go func () {
+			go func() {
 				log.Println("handling connection")
 				s.handleConnection(conn)
 			}()
@@ -66,6 +72,6 @@ func (s *Server) Listen() {
 
 // NewServer creates a new value for Server
 // returns the pointer of that value.
-func NewServer(address string) *Server {
-	return &Server{Addr: address, Handler: nil}
+func NewServer(address string, exitChan <-chan bool) *Server {
+	return &Server{Addr: address, Handler: nil, exitChan: exitChan}
 }

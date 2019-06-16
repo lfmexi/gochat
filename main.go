@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/lfmexi/gochat/handlers"
@@ -21,8 +22,17 @@ func init() {
 }
 
 func main() {
-	server := server.NewServer(fmt.Sprintf("%s:%s", host, port))
+	exit := make(chan os.Signal, 1)
+	serverShutdown := make(chan bool)
+
+	server := server.NewServer(fmt.Sprintf("%s:%s", host, port), serverShutdown)
 	handler := handlers.NewChatHandler()
 	server.SetHandler(handler)
 	server.Listen()
+
+	sig := <-exit
+
+	log.Printf("Exiting with signal %s", sig)
+
+	serverShutdown <- true
 }
